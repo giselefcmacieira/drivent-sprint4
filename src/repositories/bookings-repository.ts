@@ -58,11 +58,23 @@ async function findTicketByEnrollmentId(enrollmentId: number) {
     return result
 }
 
+async function updateBooking(bookingId: number, roomId: number) {
+    const result = await prisma.booking.update({
+        data: {
+            roomId
+        },
+        where: { id: bookingId },
+        select: { id: true }
+    })
+    return result
+}
+
 export const bookingsRepository = {
     findUserBookings,
     createBooking,
     findRoomById,
     findNumberOfBookingsForARoom,
     findEnrollmentIdByUserId,
-    findTicketByEnrollmentId
+    findTicketByEnrollmentId,
+    updateBooking
 }

@@ -15,3 +15,11 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
     const booking = await bookingServices.createBooking(userId, roomId)
     return res.status(httpStatus.OK).send(booking)
 }
+
+export async function putBooking(req: AuthenticatedRequest, res: Response) {
+    const { userId } = req
+    const roomId = Number(req.body.roomId)
+    const bookingId = Number(req.body.query)
+    const booking = await bookingServices.updateBooking(bookingId, roomId, userId)
+    return res.status(httpStatus.OK).send(booking)
+}

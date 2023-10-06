@@ -23,4 +23,17 @@ async function createBooking(userId: number, roomId: number) {
     return booking
 }
 
-export const bookingServices = { findUserBookings, createBooking }
+async function updateBooking(bookingId: number, roomId: number, userId: number) {
+    if (!roomId) throw notFoundError('No room information')
+    const userBooking = await bookingsRepository.findUserBookings(userId)
+    if (!userBooking) throw forbiddenError("This user doesn't have a booking")
+    const room = await bookingsRepository.findRoomById(roomId)
+    if (!room) throw notFoundError('This room was not found')
+    const numOfBookingsForThisRoom = await bookingsRepository.findNumberOfBookingsForARoom(roomId)
+    const { capacity } = room
+    if (numOfBookingsForThisRoom >= capacity) throw forbiddenError('This room is already at its full capacity')
+    const booking = await bookingsRepository.updateBooking(bookingId, roomId)
+    return booking
+}
+
+export const bookingServices = { findUserBookings, createBooking, updateBooking }
