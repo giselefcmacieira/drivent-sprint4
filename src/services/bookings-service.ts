@@ -10,10 +10,11 @@ async function findUserBookings(userId: number) {
 
 async function createBooking(userId: number, roomId: number) {
     const enrollment = await bookingsRepository.findEnrollmentIdByUserId(userId)
-    const ticket = await bookingsRepository.findTicketByEnrollmentId(enrollment.id)
-    if (ticket.TicketType.isRemote) throw forbiddenError('This user have a remote ticket and doesnt need to book a room')
-    if (!ticket.TicketType.includesHotel) throw forbiddenError("This user's ticket doesnt includes Hotel")
-    if (ticket.status !== TicketStatus.PAID) throw forbiddenError("The user's ticket is not paid yet")
+    const { id, status, TicketType } = await bookingsRepository.findTicketByEnrollmentId(enrollment.id)
+    const { isRemote, includesHotel } = TicketType
+    if (isRemote) throw forbiddenError('This user have a remote ticket and doesnt need to book a room')
+    if (!includesHotel) throw forbiddenError("This user's ticket doesnt includes Hotel")
+    if (status !== TicketStatus.PAID) throw forbiddenError("The user's ticket is not paid yet")
     const room = await bookingsRepository.findRoomById(roomId)
     if (!room) throw notFoundError('The room searched does not exist')
     const numOfBookingsForThisRoom = await bookingsRepository.findNumberOfBookingsForARoom(roomId)
@@ -24,7 +25,6 @@ async function createBooking(userId: number, roomId: number) {
 }
 
 async function updateBooking(bookingId: number, roomId: number, userId: number) {
-    if (!roomId) throw notFoundError('No room information')
     const userBooking = await bookingsRepository.findUserBookings(userId)
     if (!userBooking) throw forbiddenError("This user doesn't have a booking")
     const room = await bookingsRepository.findRoomById(roomId)

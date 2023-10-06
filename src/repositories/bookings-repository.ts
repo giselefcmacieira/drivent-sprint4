@@ -1,5 +1,5 @@
 import { prisma } from "@/config";
-import { Booking, Room } from "@prisma/client";
+import { Booking, Room, Ticket, TicketType } from "@prisma/client";
 
 export type bookInfo = { id: number, Room: Room }
 
