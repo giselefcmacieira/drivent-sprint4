@@ -19,7 +19,15 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
 export async function putBooking(req: AuthenticatedRequest, res: Response) {
     const { userId } = req
     const roomId = Number(req.body.roomId)
-    const bookingId = Number(req.body.query)
+    const bookingId = parseInt(req.params.bookingId) as number;
     const booking = await bookingServices.updateBooking(bookingId, roomId, userId)
     return res.status(httpStatus.OK).send({ bookingId: booking.id })
 }
+
+/* export async function testBooking(req: AuthenticatedRequest, res: Response) {
+    const { userId } = req
+    const roomId = Number(req.body.roomId)
+    const bookingId = parseInt(req.params.bookingId) as number;
+    const booking = await bookingServices.updateBooking(bookingId, roomId, userId)
+    return res.send(booking)
+} */

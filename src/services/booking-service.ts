@@ -10,7 +10,7 @@ async function findUserBookings(userId: number) {
 
 async function createBooking(userId: number, roomId: number) {
     const enrollment = await bookingsRepository.findEnrollmentIdByUserId(userId)
-    const { id, status, TicketType } = await bookingsRepository.findTicketByEnrollmentId(enrollment.id)
+    const { status, TicketType } = await bookingsRepository.findTicketByEnrollmentId(enrollment.id)
     const { isRemote, includesHotel } = TicketType
     if (isRemote) throw forbiddenError('This user have a remote ticket and doesnt need to book a room')
     if (!includesHotel) throw forbiddenError("This user's ticket doesnt includes Hotel")
@@ -34,6 +34,7 @@ async function updateBooking(bookingId: number, roomId: number, userId: number) 
     if (numOfBookingsForThisRoom >= capacity) throw forbiddenError('This room is already at its full capacity')
     const booking = await bookingsRepository.updateBooking(bookingId, roomId)
     return booking
+    //return { id: bookingId }
 }
 
 export const bookingServices = { findUserBookings, createBooking, updateBooking }

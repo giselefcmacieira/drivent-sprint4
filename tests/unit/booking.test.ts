@@ -15,7 +15,7 @@ describe('Booking Service test GET/booking', () => {
     it("should throw error when user has no booking", () => {
         jest
             .spyOn(bookingsRepository, "findUserBookings")
-            .mockReturnValueOnce(null)
+            .mockResolvedValueOnce(null)
         const booking = bookingServices.findUserBookings(1)
         expect(bookingsRepository.findUserBookings).toBeCalled()
         expect(booking).rejects.toEqual({
@@ -27,7 +27,7 @@ describe('Booking Service test GET/booking', () => {
         const userBookingMock = buildBookingReturn()
         jest
             .spyOn(bookingsRepository, "findUserBookings")
-            .mockReturnValueOnce(userBookingMock)
+            .mockResolvedValueOnce(userBookingMock)
         const booking = await bookingServices.findUserBookings(1)
         expect(bookingsRepository.findUserBookings).toBeCalledTimes(1)
         expect(booking).toEqual(expect.objectContaining({

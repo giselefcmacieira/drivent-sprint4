@@ -1,3 +1,4 @@
+import { prisma } from '@/config'
 import { faker } from '@faker-js/faker'
 import { TicketStatus } from '@prisma/client'
 
@@ -13,6 +14,17 @@ export async function buildBookingReturn() {
             updatedAt: faker.date.recent()
         }
     }
+}
+
+export async function createUserBooking(userId?: number, roomId?: number) {
+    return prisma.booking.create({
+        data: {
+            userId: userId || faker.datatype.number({ min: 1, max: 1000 }),
+            roomId: roomId || faker.datatype.number({ min: 1, max: 10 }),
+            createdAt: faker.date.recent().toISOString(),
+            updatedAt: faker.date.recent().toISOString()
+        }
+    })
 }
 
 export async function buildTicketReturn(status?: TicketStatus, isRemote?: boolean, includesHotel?: boolean) {

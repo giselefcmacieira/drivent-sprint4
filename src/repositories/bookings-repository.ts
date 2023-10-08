@@ -8,10 +8,13 @@ async function findUserBookings(userId: number): Promise<bookInfo> {
         where: { userId },
         include: { Room: true }
     })
-    delete result.userId
-    delete result.roomId
-    delete result.createdAt
-    delete result.updatedAt
+    if (result) {
+        delete result.userId
+        delete result.roomId
+        delete result.createdAt
+        delete result.updatedAt
+    }
+
     return result
 }
 
@@ -63,7 +66,7 @@ async function updateBooking(bookingId: number, roomId: number) {
         data: {
             roomId
         },
-        where: { id: bookingId },
+        where: { id: Number(bookingId) },
         select: { id: true }
     })
     return result
